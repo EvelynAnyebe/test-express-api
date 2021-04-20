@@ -1,0 +1,28 @@
+{
+  "name": "test-nodejs-express-api",
+  "version": "1.0.0",
+  "description": "This repository is a practice node JS and express API. It uses folders to represent collections. For start ups unable to embrace microservice architecture, this may serve as a good way to organized your app. Try to decentralize as much as you can.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvelynAnyebe/test-nodejs-express-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EvelynAnyebe/test-nodejs-express-api/issues"
+  },
+  "homepage": "https://github.com/EvelynAnyebe/test-nodejs-express-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
