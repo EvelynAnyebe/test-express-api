@@ -1,4 +1,4 @@
-name: test-xpress-api
+name: stage-test-xpress-api
 
 on:
   push:
