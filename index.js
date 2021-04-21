@@ -16,7 +16,7 @@ app.use('/users',usersRoutes);
 
 app.get('/',(req,res)=>{
     console.log('[TEST]!');
-    res.send('Hello from homepage');
+    res.send('Hello from homepage in develop branch');
 });
 
 app.listen(PORT, HOSTNAME, () =>
