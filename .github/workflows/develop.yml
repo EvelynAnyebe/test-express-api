@@ -33,5 +33,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_APP_KEY}}
           heroku_app_name: ${{secrets.STAGING_APP_NAME}}
           useforce: true,
+          dynamicFiles: true,
           branch: develop
          
