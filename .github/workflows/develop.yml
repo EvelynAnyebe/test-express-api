@@ -1,0 +1,35 @@
+name: stage-test-xpress-api
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop    
+
+jobs:
+  build:
+    name: Develop_Deploy
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      #deploy      
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_APP_KEY}}
+          heroku_app_name: ${{secrets.STAGING_APP_NAME}} #Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_APP_EMAIL}}
+          branch: main

@@ -1,13 +1,13 @@
 import express from "express";
 
 //Import routes
-import usersRoutes from './routes/users.js';
+import { usersRoutes } from './routes/index.js';
 
 
 //Initialize express application
 const app = express();
-const PORT = 5000;
-const HOSTNAME = "127.0.0.1";
+const PORT = process.env.PORT;
+const HOSTNAME = process.env.HOST;
 
 //Initialize the body parser middleware
 app.use(express.json({}));

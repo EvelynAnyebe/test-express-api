@@ -7,6 +7,9 @@ node_modules/
 # Other files and folders
 .settings/
 
+#secrets
+.env
+
 # Executables
 *.swf
 *.air
