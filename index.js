@@ -6,8 +6,8 @@ import usersRoutes from './routes/users.js';
 
 //Initialize express application
 const app = express();
-const PORT = 5000;
-const HOSTNAME = "127.0.0.1";
+const PORT = process.env.PORT || 5000;
+const HOSTNAME = process.env.HOST || "0.0.0.0";
 
 //Initialize the body parser middleware
 app.use(express.json({}));
