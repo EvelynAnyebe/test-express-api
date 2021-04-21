@@ -27,12 +27,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       #deploy      
-      - uses: CDNievas/heroku-action@v1.0 # This is the action # This is the action
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
-          heroku_email: ${{secrets.HEROKU_APP_EMAIL}}
           heroku_api_key: ${{secrets.HEROKU_APP_KEY}}
-          heroku_app_name: ${{secrets.STAGING_APP_NAME}}
-          useforce: true,
-          dynamicFiles: true,
-          branch: develop
-         
+          heroku_app_name: ${{secrets.STAGING_APP_NAME}} #Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_APP_EMAIL}}
+          branch: "develop"
