@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/EvelynAnyebe/test-nodejs-express-api#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.12.5"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
