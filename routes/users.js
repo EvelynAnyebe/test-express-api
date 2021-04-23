@@ -1,23 +1,11 @@
 import express from 'express';
 const router=express.Router();
 
-const users=[
-    {
-        firstname:"John",
-        lastname:"Doe",
-        age:25
-    },
-    {
-        firstname:"John",
-        lastname:"Doe",
-        age:25
-    }
-]
+import { getUsers } from '../controllers/user.js'
 
-router.get('/',(req,res)=>{
- console.log('Users requested');
- res.send(users);
-})
+
+
+router.get('/',getUsers);
 
 router.post('/',(req,res)=>{
 
