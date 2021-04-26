@@ -1,13 +1,19 @@
 name: Linters
 
-on: pull_request
+on:
+  push:
+    branches:
+     - develop
+  pull_request:
+    branches: ['develop','master']
+
 
 env: 
   FORCE_COLOR: 1
 
 jobs:
   eslint:
-    name: ESLint
+    name: ESLint"
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
