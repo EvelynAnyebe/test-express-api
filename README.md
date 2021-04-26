@@ -12,4 +12,4 @@ This API can be viewed [here](https://staging-express-api.herokuapp.com/)
 The entry point for this application is index.js.
 
 ### Useful resources
-- To get started contributing, read our contibuting guideline [here]
+- To get started contributing, read our contibuting guideline [here](https://github.com/EvelynAnyebe/test-express-api/blob/main/docs/contributing.md)
