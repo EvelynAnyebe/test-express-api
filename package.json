@@ -4,9 +4,13 @@
   "description": "This repository is a practice node JS and express API. It uses folders to represent collections. For start ups unable to embrace microservice architecture, this may serve as a good way to organized your app. Try to decentralize as much as you can.",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": ">=14.16.x"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config index.js",
+    "lint": "eslint **/*.{js,jsx}",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,6 +30,7 @@
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
+    "eslint": "^7.25.0",
     "nodemon": "^2.0.7"
   }
 }
