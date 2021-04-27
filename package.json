@@ -26,9 +26,13 @@
   "homepage": "https://github.com/EvelynAnyebe/test-nodejs-express-api#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "express-validator": "^6.10.1",
     "mongoose": "^5.12.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.16",
+    "@babel/eslint-parser": "^7.13.14",
+    "@babel/eslint-plugin": "^7.13.16",
     "dotenv": "^8.2.0",
     "eslint": "^7.25.0",
     "nodemon": "^2.0.7"
