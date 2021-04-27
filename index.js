@@ -2,13 +2,14 @@ import express from 'express';
 import mongoose from 'mongoose';
 import { HOSTNAME, PORT, DB_URL } from './config.js';
 //Import routes
-import { usersRoutes } from './routes/index.js';
+import usersRoutes from './routes/users.js';
 
 //Initialize express application
 const app = express();
 
 //Initialize the body parser middleware
 app.use(express.json({}));
+
 
 //MongoDB
 mongoose.Promise=global.Promise;

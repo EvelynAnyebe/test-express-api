@@ -1,14 +1,12 @@
-import express from 'express';
-const router=express.Router();
+import express from "express";
+const router = express.Router();
 
-import { getUsers } from '../controllers/user.js'
+import { validate, getUsers, getUser } from "../controllers/user.js";
 
+router.get("/", getUsers);
 
+router.get("/:id", validate('getUser'),getUser);
 
-router.get('/',getUsers);
-
-router.post('/',(req,res)=>{
-
-});
+router.post("/", (req, res) => {});
 
 export default router;

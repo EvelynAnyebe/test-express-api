@@ -22,6 +22,6 @@ jobs:
           node-version: "12.x"
       - name: Setup ESLint
         run: |
-          npm install --save-dev eslint@7.x 
+          npm install --save-dev eslint @babel/eslint-parser @babel/eslint-plugin @babel/core
       - name: ESLint Report
         run: npx eslint .

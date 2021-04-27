@@ -3,9 +3,11 @@
     "es6": true
   },
   "extends": "eslint:recommended",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module"
+    "emcaVersion":12,
+    "sourceType": "module",
+    "allowImportExportEverywhere": true
   },
   "globals": {
     "console": "writable",
@@ -73,7 +75,7 @@
     ],
     "line-comment-position": "error",
     "linebreak-style": "off",
-    "lines-around-comment": "error",
+    "lines-around-comment": "off",
     "lines-between-class-members": "error",
     "max-classes-per-file": "error",
     "max-depth": "error",
