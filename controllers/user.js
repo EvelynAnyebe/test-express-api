@@ -2,7 +2,7 @@ import User from '../models/user.js';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { body, param, validationResult } = require('express-validator');
-import encrypt from '../utils/encrypt';
+import encrypt from '../utils/encrypt.js';
 
 /*
  *Controller helpers

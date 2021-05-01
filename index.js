@@ -1,8 +1,21 @@
+import './config/config.js';
 import express from 'express';
 import mongoose from 'mongoose';
-import { HOSTNAME, PORT, DB_URL } from './config.js';
+import devConfig from './config/devConfig.js';
+import prodConfig from './config/prodConfig.js';
+
+let HOSTNAME=devConfig.HOST;
+let PORT=devConfig.PORT;
+let DB_URL=devConfig.DB_URL;
+
+if (process.env.NODE_ENV !== "development") {
+  HOSTNAME=prodConfig.HOST;
+  PORT=prodConfig.PORT;
+  DB_URL=prodConfig.DB_URL;
+}
+
 //Import routes
-import usersRoutes from './routes/users.js';
+import usersRoutes from "./routes/users.js";
 
 //Initialize express application
 const app = express();
