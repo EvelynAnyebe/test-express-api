@@ -1,5 +1,6 @@
 import './config/config.js';
 import express from 'express';
+import morgan from 'morgan';
 import mongoose from 'mongoose';
 import devConfig from './config/devConfig.js';
 import prodConfig from './config/prodConfig.js';
@@ -19,6 +20,8 @@ import usersRoutes from "./routes/users.js";
 
 //Initialize express application
 const app = express();
+
+app.use(morgan('tiny'));
 
 //Initialize the body parser middleware
 app.use(express.json({}));

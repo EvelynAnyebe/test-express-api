@@ -1,6 +1,6 @@
 const prodConfig={
     PORT: process.env.PORT,
-    HOSTNAME: process.env.DEV_HOST,
+    HOST: process.env.HOST,
     DB_URL: process.env.DB_URL
 }
 
