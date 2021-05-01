@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { crypter } from '../helpers/encription.js';
+import { encrypt } from '../utils/encrypt.js';
 
 const { Schema, model } = mongoose;
 
@@ -44,7 +44,7 @@ const UserSchema = Schema(
       type: String,
       required: true,
       minLength: 8,
-      set: pass => crypter(pass)
+      set: pass => encrypt(pass)
     },
     emailVerificationToken: {
       type: String

@@ -8,8 +8,8 @@
     "node": ">=14.16.x"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon -r dotenv/config index.js",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon -r dotenv/config index.js",
     "lint": "eslint **/*.{js,jsx}",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
