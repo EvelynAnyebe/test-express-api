@@ -9,6 +9,7 @@ const app = express();
 
 //Initialize the body parser middleware
 app.use(express.json({}));
+app.use(express.urlencoded({extended: false}));
 
 
 //MongoDB

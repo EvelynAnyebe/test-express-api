@@ -1,15 +1,33 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import { crypter } from '../helpers/encription.js';
 
 const { Schema, model } = mongoose;
 
 const UserSchema = Schema(
   {
-    userName: String,
-    firstName: String,
-    lastName: String,
+    userName: {
+      type: String
+    },
+    firstName: {
+      type: String,
+      required: true,
+      minLength: 2
+    },
+    lastName: {
+      type: String,
+      required: true,
+      minLength: 2
+    },
     otherNames: String,
-    email: String,
-    phone: String,
+    email: {
+      type: String,
+      required: true
+    },
+    phone: {
+      type: String,
+      minLength: 11,
+      maxLength: 15
+    },
     gender: String,
     dob: Date,
     countryOfResidence: String,
@@ -22,9 +40,23 @@ const UserSchema = Schema(
       tutor: Boolean,
       admin: Boolean,
     },
-    password: String,
-    emailVerified: Boolean,
-    accountStatus: Boolean,
+    password: {
+      type: String,
+      required: true,
+      minLength: 8,
+      set: pass => crypter(pass)
+    },
+    emailVerificationToken: {
+      type: String
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    accountStatus: {
+      type: Boolean,
+      default: false,
+    },
     avatar: String,
     auth: {
       authtype: String,
@@ -46,4 +78,6 @@ const UserSchema = Schema(
   { timestamps: true }
 );
 
-export default model("user", UserSchema);
+
+
+export default model('user', UserSchema);

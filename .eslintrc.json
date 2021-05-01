@@ -61,7 +61,7 @@
     "id-denylist": "error",
     "id-length": "error",
     "id-match": "error",
-    "implicit-arrow-linebreak": ["error", "below"],
+    "implicit-arrow-linebreak": "off",
     "indent": "off",
     "init-declarations": "error",
     "jsx-quotes": "error",

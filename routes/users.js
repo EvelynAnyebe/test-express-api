@@ -1,12 +1,17 @@
-import express from "express";
+import express from 'express';
 const router = express.Router();
 
-import { validate, getUsers, getUser } from "../controllers/user.js";
+import {
+  validate,
+  getUsers,
+  getUser,
+  createUser,
+} from '../controllers/user.js';
 
-router.get("/", getUsers);
+router.get('/', getUsers);
 
-router.get("/:id", validate('getUser'),getUser);
+router.get('/:id', validate('getUser'), getUser);
 
-router.post("/", (req, res) => {});
+router.post('/', validate('createUser'), createUser);
 
 export default router;
