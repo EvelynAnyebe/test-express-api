@@ -2,7 +2,7 @@ import User from '../models/user.js';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { body, param, validationResult } = require('express-validator');
-import { crypter } from '../helpers/encription.js';
+import encrypt from '../utils/encrypt';
 
 /*
  *Controller helpers
@@ -15,7 +15,7 @@ function prepareUser(body) {
     lastName: lastName,
     email: email,
     password: password,
-    emailVerificationToken: crypter(firstName),
+    emailVerificationToken: encrypt(firstName),
     role: {
       user: true,
     },
