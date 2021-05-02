@@ -12,11 +12,11 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-let HOSTNAME = process.env.DEV_HOST;
+let HOSTNAME = process.env.HOST;
 const PORT = process.env.PORT;
 
-if (process.env.NODE_ENV !== 'development') {
-  HOSTNAME = process.env.HOST;
+if (process.env.NODE_ENV === 'development') {
+  HOSTNAME = process.env.DEV_HOST;
 }
 
 const server = http.createServer(app);
