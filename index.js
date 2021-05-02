@@ -1,52 +1,36 @@
-import './config/config.js';
-import express from 'express';
-import morgan from 'morgan';
-import mongoose from 'mongoose';
-import devConfig from './config/devConfig.js';
-import prodConfig from './config/prodConfig.js';
+import './src/config/config.js';
+import http from 'http';
+import './src/config/mongoDb.js';
+import app from './app.js';
 
-let HOSTNAME=devConfig.HOST;
-let PORT=devConfig.PORT;
-let DB_URL=devConfig.DB_URL;
+// HANDLING UNCAUGHT EXCEPTION ERRORS
+process.on('uncaughtException', (err) => {
+  console.log(
+    `UNCAUGHT EXCEPTION! Server Shutting down...\n
+    ${err.name} \n ${err.message} `
+  );
+  process.exit(1);
+});
 
-if (process.env.NODE_ENV !== "development") {
-  HOSTNAME=prodConfig.HOST;
-  PORT=prodConfig.PORT;
-  DB_URL=prodConfig.DB_URL;
+let HOSTNAME = process.env.DEV_HOST;
+const PORT = process.env.PORT;
+
+if (process.env.NODE_ENV !== 'development') {
+  HOSTNAME = process.env.HOST;
 }
 
-//Import routes
-import usersRoutes from "./routes/users.js";
+const server = http.createServer(app);
 
-//Initialize express application
-const app = express();
-
-app.use(morgan('tiny'));
-
-//Initialize the body parser middleware
-app.use(express.json({}));
-app.use(express.urlencoded({extended: false}));
-
-
-//MongoDB
-mongoose.Promise=global.Promise;
-mongoose.connect(DB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log("Database up and running.");
-}).catch(err => {
-  console.log('Could not connect to the database. Exiting now...', err);
-  process.exit();
-});
-
-app.use("/users", usersRoutes);
-
-app.get("/", (req, res) => {
-  console.log("[TEST]!");
-  res.send("Hello from homepage in develop branch");
-});
-
-app.listen(PORT, HOSTNAME, () =>
-  console.log(`Server running on port: http://localhost:${PORT}`)
+server.listen(PORT, HOSTNAME, () =>
+  console.log(`Server running on port: ${HOSTNAME}:${PORT}`)
 );
+
+process.on('unhandledRejection', (err) => {
+  console.log(
+    `UNHANDLED REJECTION!! Shutting down Server...\n
+    ${err.name} \n ${err.message}`
+  );
+  server.close(() => {
+    process.exit(1);
+  });
+});
