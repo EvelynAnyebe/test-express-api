@@ -128,11 +128,8 @@ export async function getUser(req, res) {
     }
     //Validation passed, handle request
     const user = await User.findById(req.params.id, fieldSelect).exec();
-    res.send({
-      statusCode: 200,
-      message: 'successful',
-      data: user,
-    });
+    httpResponseOk.data = user;
+    res.send(httpResponseOk.response());
   } catch (err) {
     res.send({
       statusCode: 500,
