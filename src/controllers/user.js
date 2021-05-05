@@ -1,7 +1,10 @@
 import User from '../models/user.js';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { body, param, validationResult } = require('express-validator');
+/*
+ * Import { createRequire } from 'module';
+ * Const require = createRequire(import.meta.url);
+ */
+import { body, param, validationResult } from 'express-validator';
+import httpResponseOk from './../utils/httpResponseCodes.js';
 import encrypt from '../utils/encrypt.js';
 
 /*
@@ -86,17 +89,10 @@ export async function getUsers(req, res) {
   try {
     const users = await User.find().select(fieldSelect).exec();
     if (!users.length) {
-      return res.send({
-        statusCode: res.statusCode,
-        message: 'There are no registered users at the moment.',
-        data: users,
-      });
+      httpResponseOk.message = 'There are no registered users at the moment.';
     }
-    res.send({
-      statusCode: res.statusCode,
-      message: 'Users returned successfuly.',
-      data: users,
-    });
+    httpResponseOk.data = users;
+    res.send(httpResponseOk.response());
   } catch (err) {
     res.status(500).send({
       statusCode: res.statusCode,
