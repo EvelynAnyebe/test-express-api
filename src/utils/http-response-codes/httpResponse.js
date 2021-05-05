@@ -1,7 +1,7 @@
 export default class HttpResponse {
-  constructor(statusCode) {
+  constructor(statusCode, message = null) {
     this.statusCode = statusCode;
-    this.message = 'Subclasses have to implement response';
+    this.message = message;
   }
 
   get statusCode() {
@@ -20,7 +20,11 @@ export default class HttpResponse {
     this._message = message;
   }
 
-  response() {
-    throw new Error(this._message);
+  response(message = null, data = null) {
+    return {
+      statusCode: this._statusCode,
+      message: message || this._message,
+      data,
+    };
   }
 }

@@ -1,11 +1,19 @@
-import User from '../models/user.js';
 /*
  * Import { createRequire } from 'module';
  * Const require = createRequire(import.meta.url);
  */
+import User from '../models/user.js';
 import { body, param, validationResult } from 'express-validator';
-import httpResponseOk from './../utils/httpResponseCodes.js';
-import encrypt from '../utils/encrypt.js';
+import encrypt from './../../utils/encrypt.js';
+
+import {
+  HTTP_OK,
+  HTTP_CREATED,
+  HTTP_SE_500,
+  HTTP_CE_400,
+  HTTP_CE_406,
+  HTTP_CE_422,
+} from './../../utils/httpResponseCodes.js';
 
 /*
  *Controller helpers
@@ -79,7 +87,7 @@ export function validate(method) {
 }
 
 //Specifies the fields to return
-const fieldSelect =`userName firstName lastName otherNames 
+const fieldSelect = `userName firstName lastName otherNames 
                     email phone gender dob countryOfResidence countryCode 
                     stateOfResidence cityOfResidence address role 
                     emailVerified accountStatus avatar auth`;
@@ -89,16 +97,11 @@ export async function getUsers(req, res) {
   try {
     const users = await User.find().select(fieldSelect).exec();
     if (!users.length) {
-
-      httpResponseOk.message = 'There are no registered users at the moment.';
+      return HTTP_OK.response('There are no registered users at the moment.');
     }
-    httpResponseOk.data = users;
-    res.send(httpResponseOk.response());
+    res.send(HTTP_OK.response(null, users));
   } catch (err) {
-    res.status(500).send({
-      statusCode: res.statusCode,
-      message: err.message || 'Some error occurred while retrieving users.',
-    });
+    res.status(HTTP_SE_500.statusCode).send(HTTP_SE_500.response(err.message));
   }
 }
 
@@ -121,20 +124,15 @@ export async function getUser(req, res) {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).send({
-        statusCode: 400,
-        message: errors.array(),
-      });
+      return res
+        .status(HTTP_CE_400.statusCode)
+        .send(HTTP_CE_400.response(errors.array()));
     }
     //Validation passed, handle request
     const user = await User.findById(req.params.id, fieldSelect).exec();
-    httpResponseOk.data = user;
-    res.send(httpResponseOk.response());
+    res.send(HTTP_OK.response(null, user));
   } catch (err) {
-    res.send({
-      statusCode: 500,
-      message: err.message || 'An internal error occurred. Try again in 15secs',
-    });
+    res.status(HTTP_SE_500.statusCode).send(HTTP_SE_500.response(err.message));
   }
 }
 
@@ -157,37 +155,32 @@ export async function createUser(req, res) {
     //Finds the validation errors in this request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(422).send({
-        statusCode: 422,
-        message: errors.array(),
-      });
+      return res
+        .status(HTTP_CE_422.statusCode)
+        .send(HTTP_CE_422.response(errors.array()));
     }
 
     //Check if email already exist
-    const user = await User.findOne({ email: req.body.email }, fieldSelect)
-    .exec();
-
+    const user = await User.findOne(
+      { email: req.body.email },
+      fieldSelect
+    ).exec();
     //406 Not Acceptable
     if (user) {
-      return res.status(406).send({
-        statusCode: 406,
-        message: 'User account already exist',
-        data: user,
-      });
+      return res
+        .status(HTTP_CE_406.statusCode)
+        .send(HTTP_CE_406.response('User account already exist', user));
     }
 
     //Create user
     const newUser = await User.create(prepareUser(req.body));
 
-    res.status(201).send({
-      statusCode: 201,
-      message: 'User created successfully',
-      data: selectField(newUser),
-    });
+    res
+      .status(HTTP_CREATED.statusCode)
+      .send(
+        HTTP_CREATED.response('User created successfully', selectField(newUser))
+      );
   } catch (err) {
-    return res.status(500).send({
-      statusCode: 500,
-      message: err.message || 'An internal error occurred. Try again in 15secs',
-    });
+    res.status(HTTP_SE_500.statusCode).send(HTTP_SE_500.response(err.message));
   }
 }
