@@ -1,7 +1,10 @@
 import User from '../models/user.js';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { body, param, validationResult } = require('express-validator');
+/*
+ * Import { createRequire } from 'module';
+ * Const require = createRequire(import.meta.url);
+ */
+import { body, param, validationResult } from 'express-validator';
+import httpResponseOk from './../utils/httpResponseCodes.js';
 import encrypt from '../utils/encrypt.js';
 
 /*
@@ -76,27 +79,21 @@ export function validate(method) {
 }
 
 //Specifies the fields to return
-const fieldSelect =
-  'userName firstName lastName otherNames email phone gender dob' +
-  ' countryOfResidence countryCode stateOfResidence cityOfResidence ' +
-  'address role emailVerified accountStatus avatar auth';
+const fieldSelect =`userName firstName lastName otherNames 
+                    email phone gender dob countryOfResidence countryCode 
+                    stateOfResidence cityOfResidence address role 
+                    emailVerified accountStatus avatar auth`;
 
 // Get all and return all users.
 export async function getUsers(req, res) {
   try {
     const users = await User.find().select(fieldSelect).exec();
     if (!users.length) {
-      return res.send({
-        statusCode: res.statusCode,
-        message: 'There are no registered users at the moment.',
-        data: users,
-      });
+
+      httpResponseOk.message = 'There are no registered users at the moment.';
     }
-    res.send({
-      statusCode: res.statusCode,
-      message: 'Users returned successfuly.',
-      data: users,
-    });
+    httpResponseOk.data = users;
+    res.send(httpResponseOk.response());
   } catch (err) {
     res.status(500).send({
       statusCode: res.statusCode,
@@ -172,6 +169,7 @@ export async function createUser(req, res) {
     //Check if email already exist
     const user = await User.findOne({ email: req.body.email }, fieldSelect)
     .exec();
+
     //406 Not Acceptable
     if (user) {
       return res.status(406).send({
