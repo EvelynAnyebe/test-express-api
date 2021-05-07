@@ -4,16 +4,9 @@
  */
 import User from '../models/user.js';
 import { body, param, validationResult } from 'express-validator';
-import encrypt from './../../utils/encrypt.js';
-
-import {
-  HTTP_OK,
-  HTTP_CREATED,
-  HTTP_SE_500,
-  HTTP_CE_400,
-  HTTP_CE_406,
-  HTTP_CE_422,
-} from './../../utils/httpResponseCodes.js';
+import { Response } from 'http-status-codez';
+import encrypt from './../utils/encrypt.js';
+import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
 
 /*
  *Controller helpers
@@ -97,11 +90,18 @@ export async function getUsers(req, res) {
   try {
     const users = await User.find().select(fieldSelect).exec();
     if (!users.length) {
-      return HTTP_OK.response('There are no registered users at the moment.');
+      return res.send(
+        new SuccessResponse(
+          users,
+          'There are no registered users at the moment'
+        )
+      );
     }
-    res.send(HTTP_OK.response(null, users));
+    return res.send(new SuccessResponse(users));
   } catch (err) {
-    res.status(HTTP_SE_500.statusCode).send(HTTP_SE_500.response(err.message));
+    res
+      .status(Response.HTTP_INTERNAL_SERVER_ERROR)
+      .send(new ErrorResponse(err));
   }
 }
 
@@ -125,14 +125,22 @@ export async function getUser(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
-        .status(HTTP_CE_400.statusCode)
-        .send(HTTP_CE_400.response(errors.array()));
+        .status(Response.HTTP_BAD_REQUEST)
+        .send(new ErrorResponse(errors));
     }
     //Validation passed, handle request
     const user = await User.findById(req.params.id, fieldSelect).exec();
-    res.send(HTTP_OK.response(null, user));
+
+    if (!user) {
+      res
+        .status(Response.HTTP_NOT_FOUND)
+        .send(new ErrorResponse('USER NOT FOUND'));
+    }
+    res.send(new SuccessResponse(user));
   } catch (err) {
-    res.status(HTTP_SE_500.statusCode).send(HTTP_SE_500.response(err.message));
+    res
+      .status(Response.HTTP_INTERNAL_SERVER_ERROR)
+      .send(new ErrorResponse(err));
   }
 }
 
@@ -156,8 +164,8 @@ export async function createUser(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
-        .status(HTTP_CE_422.statusCode)
-        .send(HTTP_CE_422.response(errors.array()));
+        .status(Response.HTTP_UNPROCESSABLE_ENTITY)
+        .send(new ErrorResponse(errors));
     }
 
     //Check if email already exist
@@ -168,19 +176,20 @@ export async function createUser(req, res) {
     //406 Not Acceptable
     if (user) {
       return res
-        .status(HTTP_CE_406.statusCode)
-        .send(HTTP_CE_406.response('User account already exist', user));
+        .status(Response.HTTP_NOT_ACCEPTABLE)
+        .send(new ErrorResponse('User already exist'));
     }
 
     //Create user
     const newUser = await User.create(prepareUser(req.body));
 
     res
-      .status(HTTP_CREATED.statusCode)
+      .status(Response.HTTP_CREATED)
       .send(
-        HTTP_CREATED.response('User created successfully', selectField(newUser))
+        new SuccessResponse(selectField(newUser), 'User created successfully')
       );
   } catch (err) {
-    res.status(HTTP_SE_500.statusCode).send(HTTP_SE_500.response(err.message));
+    res.status(Response.HTTP_INTERNAL_SERVER_ERROR)
+    .send(new ErrorResponse(err));
   }
 }
