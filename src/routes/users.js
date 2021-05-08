@@ -1,17 +1,16 @@
 import express from 'express';
 const router = express.Router();
-
 import {
-  validate,
-  getUsers,
-  getUser,
-  createUser,
-} from '../controllers/user.js';
+  getUserValidation,
+  createUserValidation,
+} from './../middleware/requestValidation/user.js';
+
+import { getUsers, getUser, createUser } from '../controllers/user.js';
 
 router.get('/', getUsers);
 
-router.get('/:id', validate('getUser'), getUser);
+router.get('/:id', getUserValidation, getUser);
 
-router.post('/', validate('createUser'), createUser);
+router.post('/', createUserValidation, createUser);
 
 export default router;

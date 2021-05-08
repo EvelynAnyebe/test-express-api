@@ -3,7 +3,6 @@
  * Const require = createRequire(import.meta.url);
  */
 import User from '../models/user.js';
-import { body, param, validationResult } from 'express-validator';
 import { Response } from 'http-status-codez';
 import encrypt from './../utils/encrypt.js';
 import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
@@ -53,31 +52,7 @@ function selectField(newUser) {
   }))(newUser);
 }
 
-/*
- * Validate requests middleware
- */
-export function validate(method) {
-  switch (method) {
-    case 'getUser': {
-      return param('id', 'Expected identifier of length>=24')
-        .exists()
-        .isLength({
-          min: 24,
-        });
-    }
-    case 'createUser': {
-      return [
-        body('firstName', 'Expected firstname of length>2').isLength({
-          min: 2,
-        }),
-        body('lastName', 'Expected lastname of length>=2').isLength({ min: 2 }),
-        body('email', 'Expected valid email').isEmail(),
-        body('password', 'Expected password of length>=8').isLength({ min: 8 }),
-      ];
-    }
-    default:
-  }
-}
+
 
 //Specifies the fields to return
 const fieldSelect = `userName firstName lastName otherNames 
@@ -90,9 +65,8 @@ export async function getUsers(req, res) {
   try {
     const users = await User.find().select(fieldSelect).exec();
     if (!users.length) {
-      return res.send(
-        new SuccessResponse(
-          users,
+      return res.status(Response.HTTP_NOT_FOUND).send(
+        new ErrorResponse(
           'There are no registered users at the moment'
         )
       );
@@ -122,17 +96,11 @@ export async function getUser(req, res) {
    *400 Bad Request error
    */
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res
-        .status(Response.HTTP_BAD_REQUEST)
-        .send(new ErrorResponse(errors));
-    }
     //Validation passed, handle request
     const user = await User.findById(req.params.id, fieldSelect).exec();
 
     if (!user) {
-      res
+     return res
         .status(Response.HTTP_NOT_FOUND)
         .send(new ErrorResponse('USER NOT FOUND'));
     }
@@ -160,14 +128,6 @@ export async function getUser(req, res) {
  */
 export async function createUser(req, res) {
   try {
-    //Finds the validation errors in this request
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res
-        .status(Response.HTTP_UNPROCESSABLE_ENTITY)
-        .send(new ErrorResponse(errors));
-    }
-
     //Check if email already exist
     const user = await User.findOne(
       { email: req.body.email },
@@ -189,7 +149,8 @@ export async function createUser(req, res) {
         new SuccessResponse(selectField(newUser), 'User created successfully')
       );
   } catch (err) {
-    res.status(Response.HTTP_INTERNAL_SERVER_ERROR)
-    .send(new ErrorResponse(err));
+    res
+      .status(Response.HTTP_INTERNAL_SERVER_ERROR)
+      .send(new ErrorResponse(err));
   }
 }
