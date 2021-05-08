@@ -2,8 +2,9 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const crypto = require('crypto');
 
+
 // Creating salt
-const salt = 'f844b09ff50c';
+const salt = process.env.encrypt_salt;
 
 export default function encrypt(value) {
 

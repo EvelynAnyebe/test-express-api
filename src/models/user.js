@@ -58,21 +58,19 @@ const UserSchema = Schema(
       default: false,
     },
     avatar: String,
-    auth: {
-      authtype: String,
-      accesstoken: {
-        token: String,
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
-        updatedAt: {
-          type: Date,
-          default: Date.now,
-        },
-        refresh: String,
-        expired: Boolean,
+    authtype: String,
+    accesstoken: {
+      token: String,
+      createdAt: {
+        type: Date,
+        default: Date.now,
       },
+      updatedAt: {
+        type: Date,
+        default: Date.now,
+      },
+      refresh: String,
+      expired: Boolean,
     },
   },
   { timestamps: true }

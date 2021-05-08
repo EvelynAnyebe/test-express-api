@@ -4,63 +4,17 @@
  */
 import User from '../models/user.js';
 import { Response } from 'http-status-codez';
-import encrypt from './../utils/encrypt.js';
+import {selectField, prepareUser } from './../utils/userHelper.js';
 import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
 
-/*
- *Controller helpers
- *  Prepare the user object for insert
- */
-function prepareUser(body) {
-  const { firstName, lastName, email, password } = body;
-  const emailVerificationToken = encrypt(firstName);
-  const role = { user: true };
-  const auth = { authtype: 'auth' };
-  return {
-    firstName,
-    lastName,
-    email,
-    password,
-    emailVerificationToken,
-    role,
-    auth,
-  };
-}
 
-// Select attribute to return
-function selectField(newUser) {
-  return (({
-    userName,
-    firstName,
-    lastName,
-    email,
-    role,
-    emailVerified,
-    emailVerificationToken,
-    accountStatus,
-    auth,
-  }) => ({
-    userName,
-    firstName,
-    lastName,
-    email,
-    role,
-    emailVerified,
-    emailVerificationToken,
-    accountStatus,
-    auth,
-  }))(newUser);
-}
-
-
-
-//Specifies the fields to return
+// SPECIFIES THE FIELDS TO RETURN
 const fieldSelect = `userName firstName lastName otherNames 
                     email phone gender dob countryOfResidence countryCode 
                     stateOfResidence cityOfResidence address role 
-                    emailVerified accountStatus avatar auth`;
+                    emailVerified accountStatus avatar authtype`;
 
-// Get all and return all users.
+// GET ALL USERS
 export async function getUsers(req, res) {
   try {
     const users = await User.find().select(fieldSelect).exec();
@@ -79,22 +33,9 @@ export async function getUsers(req, res) {
   }
 }
 
-/*
- * @api {get} /users/:id Get single user
- * @apiName
- * @apiPermission [user,admin]
- * @apiGroup user
- *
- * @apiParam {String} [id] _id
- *
- *@apiSuccess (200) {Object} mixed User object
- */
+
+// GET A SINGLE USER BY ID
 export async function getUser(req, res) {
-  /*
-   *Finds the validation errors in this request and wraps
-   *them in an object with handy functions
-   *400 Bad Request error
-   */
   try {
     //Validation passed, handle request
     const user = await User.findById(req.params.id, fieldSelect).exec();
@@ -112,20 +53,7 @@ export async function getUser(req, res) {
   }
 }
 
-/*
- * @api {get} /users Create a user
- * @apiName
- * @apiPermission
- * @apiGroup user
- *
- * @apiParam {String} [firstName] firstName len>=2
- * @apiParam {String} [lastName] lastName len>=2
- * @apiParam {String} [email] email
- * @apiParam {String} [password] password len>=8
- * @apiParam {String} [confirmPassword] confirmPassword
- *
- *@apiSuccess (200) {Object} mixed User object
- */
+// CREATE A USER - SIGNUP USING LOGIN FORM
 export async function createUser(req, res) {
   try {
     //Check if email already exist

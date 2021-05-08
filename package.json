@@ -25,11 +25,13 @@
   },
   "homepage": "https://github.com/EvelynAnyebe/test-nodejs-express-api#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.10.1",
     "http-status-codez": "^1.1.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.5",
     "morgan": "^1.10.0"
   },
