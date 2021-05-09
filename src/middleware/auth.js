@@ -2,7 +2,7 @@ import { Response } from 'http-status-codez';
 import { ErrorResponse } from './../utils/appResponse.js';
 import JWT from 'jsonwebtoken';
 
-export function auth(req,res,next) {
+export default function auth(req,res,next) {
     const accessToken = req.headers["x-access-token"] ||
     req.headers.authorization;
     if (!accessToken) {
