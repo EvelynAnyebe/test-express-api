@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import encrypt from '../utils/encrypt.js';
+import bcrypt from 'bcrypt';
 
 const { Schema, model } = mongoose;
 
@@ -44,10 +44,11 @@ const UserSchema = Schema(
       type: String,
       required: true,
       minLength: 8,
-      set: pass => encrypt(pass)
+      select: false
     },
     emailVerificationToken: {
-      type: String
+      type: String,
+      select: false
     },
     emailVerified: {
       type: Boolean,
@@ -75,6 +76,18 @@ const UserSchema = Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.pre('save', async function(next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  this.password = await bcrypt.hash(this.password, 12);
+});
+
+UserSchema.methods.comparePassword = function(reqPassword) {
+  return bcrypt.compare(reqPassword, this.password);
+
+}
 
 
 

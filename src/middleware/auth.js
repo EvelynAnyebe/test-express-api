@@ -13,7 +13,7 @@ export function auth(req,res,next) {
     JWT.verify(accessToken, process.env.JWT_SECRET, (err, decoded)=>{
         if (err) {
             return res.status(Response.HTTP_UNAUTHORIZED)
-            .send(new ErrorResponse("Unauthorized!"));
+            .send(new ErrorResponse(err));
           }
           req.userId = decoded.id;
           req.role = decoded.role;

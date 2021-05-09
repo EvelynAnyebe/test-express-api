@@ -1,7 +1,5 @@
 import User from '../models/user.js';
 import { Response } from 'http-status-codez';
-import encrypt from './../utils/encrypt.js';
-import { selectField } from './../utils/userHelper.js';
 import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
 import JWT from 'jsonwebtoken';
 
@@ -19,8 +17,7 @@ export async function login(req, res) {
     if (
       !user ||
       user.authtype !== 'auth' ||
-      encrypt(req.body.password) !== user.password
-    ) {
+      !user.comparePassword(req.body.password)) {
       return res
         .status(Response.HTTP_NOT_FOUND)
         .send(new ErrorResponse('Wrong email or password provided'));
@@ -33,7 +30,7 @@ export async function login(req, res) {
     }
 
     const accessToken = generateAccessToken(user.id,user.role);
-    res.send(new SuccessResponse({ user: selectField(user),
+    res.send(new SuccessResponse({ user,
         accessToken }));
   } catch (err) {
     res

@@ -4,20 +4,30 @@
  */
 import User from '../models/user.js';
 import { Response } from 'http-status-codez';
-import {selectField, prepareUser } from './../utils/userHelper.js';
 import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
 
-
-// SPECIFIES THE FIELDS TO RETURN
-const fieldSelect = `userName firstName lastName otherNames 
-                    email phone gender dob countryOfResidence countryCode 
-                    stateOfResidence cityOfResidence address role 
-                    emailVerified accountStatus avatar authtype`;
+/*
+ *Controller helpers
+ *  Prepare the user object for insert
+ */
+ function prepareUser(body) {
+  const { firstName, lastName, email, password } = body;
+  const role = { user: true };
+  const authtype = 'auth';
+  return {
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+    authtype,
+  };
+}
 
 // GET ALL USERS
 export async function getUsers(req, res) {
   try {
-    const users = await User.find().select(fieldSelect).exec();
+    const users = await User.find().exec();
     if (!users.length) {
       return res.status(Response.HTTP_NOT_FOUND).send(
         new ErrorResponse(
@@ -38,7 +48,7 @@ export async function getUsers(req, res) {
 export async function getUser(req, res) {
   try {
     //Validation passed, handle request
-    const user = await User.findById(req.params.id, fieldSelect).exec();
+    const user = await User.findById(req.params.id).exec();
 
     if (!user) {
      return res
@@ -58,9 +68,7 @@ export async function createUser(req, res) {
   try {
     //Check if email already exist
     const user = await User.findOne(
-      { email: req.body.email },
-      fieldSelect
-    ).exec();
+      { email: req.body.email }).exec();
     //406 Not Acceptable
     if (user) {
       return res
@@ -69,12 +77,12 @@ export async function createUser(req, res) {
     }
 
     //Create user
-    const newUser = await User.create(prepareUser(req.body));
+    const newUser = await User.save(new User(prepareUser(req.body)));
 
     res
       .status(Response.HTTP_CREATED)
       .send(
-        new SuccessResponse(selectField(newUser), 'User created successfully')
+        new SuccessResponse(newUser, 'User created successfully')
       );
   } catch (err) {
     res
