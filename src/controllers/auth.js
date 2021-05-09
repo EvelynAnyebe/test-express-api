@@ -13,7 +13,8 @@ function generateAccessToken(userId, role) {
 export async function login(req, res) {
   // CHECK THAT USER EXIST AND PASSWORD MATCH
   try {
-    const user = await User.findOne({ email: req.body.email }).exec();
+    const user = await User.findOne({ email: req.body.email })
+    .select('+password').exec();
     if (
       !user ||
       user.authtype !== 'auth' ||

@@ -76,8 +76,9 @@ export async function createUser(req, res) {
         .send(new ErrorResponse('User already exist'));
     }
 
+    const userObj = new User(prepareUser(req.body));
     //Create user
-    const newUser = await User.save(new User(prepareUser(req.body)));
+    const newUser = await userObj.save();
 
     res
       .status(Response.HTTP_CREATED)
