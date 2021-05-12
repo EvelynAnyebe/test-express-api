@@ -83,7 +83,7 @@
     "max-lines": "error",
     "max-lines-per-function": "error",
     "max-nested-callbacks": "error",
-    "max-params": "error",
+    "max-params": ["error",4],
     "max-statements": "error",
     "max-statements-per-line": "error",
     "multiline-comment-style": "error",
@@ -166,7 +166,7 @@
     "no-unused-expressions": "error",
     "no-unused-vars": [
       "error",
-      { "varsIgnorePattern": "", "argsIgnorePattern": "req|res|next|val" }
+      { "varsIgnorePattern": "", "argsIgnorePattern": "req|res|next|val|options" }
     ],
     "no-use-before-define": "error",
     "no-useless-backreference": "error",
@@ -191,7 +191,7 @@
     "operator-linebreak": "error",
     "padded-blocks": "off",
     "padding-line-between-statements": "error",
-    "prefer-arrow-callback": "error",
+    "prefer-arrow-callback": "off",
     "prefer-const": "error",
     "prefer-destructuring": "off",
     "prefer-exponentiation-operator": "error",

@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import passport from 'passport';
 
 // IMPORT ROUTES
 import usersRoutes from './src/routes/users.js';
@@ -21,6 +22,8 @@ app.use(morgan('tiny'));
 // INITIALIZE BODY PARSER MIDDLEWARE
 app.use(express.json({}));
 app.use(express.urlencoded({ extended: false }));
+
+app.use(passport.initialize());
 
 app.use('/users', usersRoutes);
 

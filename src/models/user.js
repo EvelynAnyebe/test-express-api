@@ -36,9 +36,18 @@ const UserSchema = Schema(
     cityOfResidence: String,
     address: String,
     role: {
-      user: Boolean,
-      tutor: Boolean,
-      admin: Boolean,
+      user: {
+        type: Boolean,
+        default: true
+      },
+      tutor: {
+        type: Boolean,
+        default: false
+      },
+      admin: {
+        type: Boolean,
+        default: false
+      }
     },
     password: {
       type: String,
@@ -60,22 +69,19 @@ const UserSchema = Schema(
     },
     avatar: String,
     authtype: String,
-    accesstoken: {
-      token: String,
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      },
-      updatedAt: {
-        type: Date,
-        default: Date.now,
-      },
-      refresh: String,
-      expired: Boolean,
-    },
   },
   { timestamps: true }
 );
+
+if (!UserSchema.options.toObject) {
+  UserSchema.options.toObject = {};
+}
+
+UserSchema.options.toObject.transform = function (doc, ret, options) {
+  delete ret.__v;
+  delete ret.password;
+  return ret;
+}
 
 UserSchema.pre('save', async function(next) {
   if (!this.isModified("password")) {
@@ -88,6 +94,4 @@ UserSchema.methods.comparePassword = function(enteredPassword) {
   return bcrypt.compareSync(enteredPassword, this.password);
 }
 
-
-
-export default model('user', UserSchema);
+export default model('User', UserSchema);

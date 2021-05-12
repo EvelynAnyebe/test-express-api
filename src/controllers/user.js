@@ -3,19 +3,16 @@ import { Response } from 'http-status-codez';
 import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
 
 /*
- *Controller helpers
  *  Prepare the user object for insert
  */
  function prepareUser(body) {
   const { firstName, lastName, email, password } = body;
-  const role = { user: true };
   const authtype = 'auth';
   return {
     firstName,
     lastName,
     email,
     password,
-    role,
     authtype,
   };
 }
