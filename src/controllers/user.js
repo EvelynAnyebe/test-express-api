@@ -1,7 +1,3 @@
-/*
- * Import { createRequire } from 'module';
- * Const require = createRequire(import.meta.url);
- */
 import User from '../models/user.js';
 import { Response } from 'http-status-codez';
 import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
@@ -27,7 +23,7 @@ import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
 // GET ALL USERS
 export async function getUsers(req, res) {
   try {
-    const users = await User.find().exec();
+    const users = await User.find();
     if (!users.length) {
       return res.status(Response.HTTP_NOT_FOUND).send(
         new ErrorResponse(
@@ -47,14 +43,8 @@ export async function getUsers(req, res) {
 // GET A SINGLE USER BY ID
 export async function getUser(req, res) {
   try {
-    //Validation passed, handle request
-    const user = await User.findById(req.params.id).exec();
+    const user = await User.findById(req.params.id);
 
-    if (!user) {
-     return res
-        .status(Response.HTTP_NOT_FOUND)
-        .send(new ErrorResponse('USER NOT FOUND'));
-    }
     res.send(new SuccessResponse(user));
   } catch (err) {
     res
@@ -66,10 +56,7 @@ export async function getUser(req, res) {
 // CREATE A USER - SIGNUP USING LOGIN FORM
 export async function createUser(req, res) {
   try {
-    //Check if email already exist
-    const user = await User.findOne(
-      { email: req.body.email }).exec();
-    //406 Not Acceptable
+    const user = await User.findOne({ email: req.body.email });
     if (user) {
       return res
         .status(Response.HTTP_NOT_ACCEPTABLE)
@@ -77,7 +64,6 @@ export async function createUser(req, res) {
     }
 
     const userObj = new User(prepareUser(req.body));
-    //Create user
     const newUser = await userObj.save();
 
     res

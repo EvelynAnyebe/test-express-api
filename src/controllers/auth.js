@@ -14,7 +14,7 @@ export async function login(req, res) {
   // CHECK THAT USER EXIST AND PASSWORD MATCH
   try {
     const user = await User.findOne({ email: req.body.email })
-    .select('+password').exec();
+    .select('+password');
     if (
       !user ||
       user.authtype !== 'auth' ||
@@ -24,7 +24,7 @@ export async function login(req, res) {
         .send(new ErrorResponse('Wrong email or password provided'));
     }
 
-    if (!user.emailVerified && !user.accountStatus) {
+    if (!user.emailVerified || !user.accountStatus) {
       return res
         .status(Response.HTTP_FORBIDDEN)
         .send(new ErrorResponse('User account is inactive'));
