@@ -5,12 +5,14 @@ import {
   createUserValidation,
 } from './../middleware/requestValidation/user.js';
 
+import auth from './../middleware/auth.js';
+
 import { getUsers, getUser, createUser } from '../controllers/user.js';
 
-router.get('/', getUsers);
+router.get('/', auth, getUsers);
 
-router.get('/:id', getUserValidation, getUser);
+router.get('/:id',auth, getUserValidation, getUser);
 
-router.post('/', createUserValidation, createUser);
+router.post('/', auth, createUserValidation, createUser);
 
 export default router;

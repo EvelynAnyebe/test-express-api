@@ -34,7 +34,6 @@ export async function login(req, res) {
   }
 }
 
-
 export function googleLogin(req, res) {
   // PASSPORT AUTHENTICATE RETURNS res.user
   try {

@@ -5,13 +5,13 @@ import validate from './../validate.js';
 /*
  * Validate requests middleware
  */
-export const getUserValidation =validate([
+export const getUserValidation = validate([
     param('id', 'Expected identifier of length>=24')
   .exists()
   .isLength({
     min: 24,
   })
-])
+]);
 
 
 // Validate('createUser'),
