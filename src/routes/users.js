@@ -1,20 +1,19 @@
 import express from 'express';
 const router = express.Router();
-/*
- * G import {
- *   getUserValidation,
- *   createUserValidation,
- * } from './../middleware/requestValidation/user.js';
- * import auth from './../middleware/auth.js';
- * G getUserValidation, createUserValidation,
- */
+import {
+  getUserValidation,
+  createUserValidation,
+} from './../middleware/requestValidation/user.js';
+
+// eslint-disable-next-line capitalized-comments
+// import auth from './../middleware/auth.js';
 
 import { getUsers, getUser, createUser } from '../controllers/user.js';
 
 router.get('/', getUsers);
 
-router.get('/:id', getUser);
+router.get('/:id', getUserValidation, getUser);
 
-router.post('/',createUser);
+router.post('/', createUserValidation, createUser);
 
 export default router;

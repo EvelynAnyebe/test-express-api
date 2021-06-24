@@ -6,14 +6,12 @@ import passport from 'passport';
 // IMPORT ROUTES
 import usersRoutes from './src/routes/users.js';
 import authRoutes from './src/routes/auth.js';
-
+import noteRoutes from './src/routes/notes.js';
 // INITIALIZE EXPRESS APP
 const app = express();
 
 // ADDING CORS MIDDLEWARE
-const corsOptions = {
-  origin: ['http://localhost'],
-};
+const corsOptions = {};
 
 app.use(cors(corsOptions));
 
@@ -28,6 +26,7 @@ app.use(passport.initialize());
 app.use('/users', usersRoutes);
 
 app.use('/auth',authRoutes);
+app.use('/notes',noteRoutes);
 
 app.all('*', (req, res) => {
   res.status(404).send(`can't find ${req.originalUrl} on this server`);

@@ -31,4 +31,4 @@ const NoteSchema = Schema(
 );
 
 
-export default model('User', NoteSchema);
+export default model('Note', NoteSchema);
