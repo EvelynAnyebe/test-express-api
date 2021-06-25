@@ -3,7 +3,7 @@ import { Response } from 'http-status-codez';
 import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
 
 
-// GET ALL USERS
+// GET ALL NOTE
 export async function getNotes(req, res) {
   try {
     const notes = await Note.find();
@@ -16,7 +16,7 @@ export async function getNotes(req, res) {
 }
 
 
-// GET A SINGLE USER BY ID
+// GET A SINGLE NOTE BY ID
 export async function getNote(req, res) {
   try {
     const note = await Note.findById(req.params.id);
@@ -29,7 +29,7 @@ export async function getNote(req, res) {
   }
 }
 
-// CREATE A USER - SIGNUP USING LOGIN FORM
+// CREATE A NOTE
 export async function createNote(req, res) {
   try {
     const newNoteObj= new Note(req.body);
@@ -45,3 +45,45 @@ export async function createNote(req, res) {
       .send(new ErrorResponse(err));
   }
 }
+
+// GET A SINGLE NOTE BY user ID
+export async function getUserNote(req, res) {
+  try {
+    const note = await Note.find({userid: req.params.userid});
+
+    res.send(new SuccessResponse(note));
+  } catch (err) {
+    res
+      .status(Response.HTTP_INTERNAL_SERVER_ERROR)
+      .send(new ErrorResponse(err));
+  }
+}
+
+function handleNoteUpdateValues(note,req) {
+  if (req.body.topic) {
+    note.topic=req.body.topic;
+  }
+  if (req.body.title) {
+    note.topic=req.body.title;
+  }
+  if (req.body.note) {
+    note.topic=req.body.note;
+  }
+  return note
+}
+
+// UPDATE A NOTE
+export async function updateNote(req, res) {
+  try {
+    const note = await Note.findById(req.params.id);
+    const noteDoc=handleNoteUpdateValues(note,req);
+    const updatedNote = await noteDoc.save();
+
+    res.send(new SuccessResponse(updatedNote));
+  } catch (err) {
+    res
+      .status(Response.HTTP_INTERNAL_SERVER_ERROR)
+      .send(new ErrorResponse(err));
+  }
+}
+

@@ -12,6 +12,9 @@ const NoteSchema = Schema(
       type: String,
       required: true,
     },
+    useremail: {
+      type: String
+    },
     topic: {
       type: String,
       required: true,
