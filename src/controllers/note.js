@@ -64,10 +64,10 @@ function handleNoteUpdateValues(note,req) {
     note.topic=req.body.topic;
   }
   if (req.body.title) {
-    note.topic=req.body.title;
+    note.title=req.body.title;
   }
   if (req.body.note) {
-    note.topic=req.body.note;
+    note.note=req.body.note;
   }
   return note
 }
