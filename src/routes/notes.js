@@ -15,6 +15,6 @@ router.get('/user/:userid', getUserNote);
 
 router.post('/', createNote);
 
-router.put('/:id', updateNote);
+router.put('/', updateNote);
 
 export default router;
