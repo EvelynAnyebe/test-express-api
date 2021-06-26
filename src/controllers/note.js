@@ -69,6 +69,7 @@ function handleNoteUpdateValues(note,req) {
   if (req.body.note) {
     note.note=req.body.note;
   }
+  note.useremail=req.body.useremail;
   return note
 }
 
