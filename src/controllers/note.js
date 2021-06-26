@@ -78,7 +78,7 @@ export async function updateNote(req, res) {
   try {
     const note = await Note.findById(req.body.id);
     if (!note) {
-      res
+      return res
       .send(new ErrorResponse("Not-Found"));
     }
     const noteDoc=handleNoteUpdateValues(note,req);
