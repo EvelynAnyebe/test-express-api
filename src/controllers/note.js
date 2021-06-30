@@ -114,6 +114,7 @@ export async function searchNote(req, res) {
 // DELETE A NOTE
 export async function deleteNote(req, res) {
   try {
+    //Needs to be a protected route
     await Note.findByIdAndRemove(req.body.id);
 
     res.send(new SuccessResponse('Note deleted'));
