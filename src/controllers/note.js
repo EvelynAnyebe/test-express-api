@@ -2,7 +2,6 @@ import Note from '../models/note.js';
 import { Response } from 'http-status-codez';
 import { ErrorResponse, SuccessResponse } from './../utils/appResponse.js';
 
-
 // GET ALL NOTE
 export async function getNotes(req, res) {
   try {
@@ -14,7 +13,6 @@ export async function getNotes(req, res) {
       .send(new ErrorResponse(err));
   }
 }
-
 
 // GET A SINGLE NOTE BY ID
 export async function getNote(req, res) {
@@ -32,13 +30,11 @@ export async function getNote(req, res) {
 // CREATE A NOTE
 export async function createNote(req, res) {
   try {
-    const newNoteObj= new Note(req.body);
+    const newNoteObj = new Note(req.body);
     const newNote = await newNoteObj.save();
     res
       .status(Response.HTTP_CREATED)
-      .send(
-        new SuccessResponse(newNote, 'Note created successfully')
-      );
+      .send(new SuccessResponse(newNote, 'Note created successfully'));
   } catch (err) {
     res
       .status(Response.HTTP_INTERNAL_SERVER_ERROR)
@@ -49,7 +45,7 @@ export async function createNote(req, res) {
 // GET A SINGLE NOTE BY user ID
 export async function getUserNote(req, res) {
   try {
-    const note = await Note.find({userid: req.params.userid});
+    const note = await Note.find({ userid: req.params.userid });
 
     res.send(new SuccessResponse(note));
   } catch (err) {
@@ -59,18 +55,18 @@ export async function getUserNote(req, res) {
   }
 }
 
-function handleNoteUpdateValues(note,req) {
+function handleNoteUpdateValues(note, req) {
   if (req.body.topic) {
-    note.topic=req.body.topic;
+    note.topic = req.body.topic;
   }
   if (req.body.title) {
-    note.title=req.body.title;
+    note.title = req.body.title;
   }
   if (req.body.note) {
-    note.note=req.body.note;
+    note.note = req.body.note;
   }
-  note.useremail=req.body.useremail;
-  return note
+  note.useremail = req.body.useremail;
+  return note;
 }
 
 // UPDATE A NOTE
@@ -78,10 +74,9 @@ export async function updateNote(req, res) {
   try {
     const note = await Note.findById(req.body.id);
     if (!note) {
-      return res
-      .send(new ErrorResponse("Not-Found"));
+      return res.send(new ErrorResponse('Not-Found'));
     }
-    const noteDoc=handleNoteUpdateValues(note,req);
+    const noteDoc = handleNoteUpdateValues(note, req);
     const updatedNote = await noteDoc.save();
 
     res.send(new SuccessResponse(updatedNote));
@@ -92,3 +87,39 @@ export async function updateNote(req, res) {
   }
 }
 
+// SEARCH NOTES
+export async function searchNote(req, res) {
+  try {
+    const regex = new RegExp(req.params.searchValue, 'gi');
+    const notes = await Note.find({
+      $and: [
+        { $or: [
+        { title: regex },
+        { topic: regex }
+      ] }
+    ],
+    });
+    if (!notes) {
+      return res.send(new ErrorResponse('Not Note Found'));
+    }
+
+    res.send(new SuccessResponse(notes));
+  } catch (err) {
+    res
+      .status(Response.HTTP_INTERNAL_SERVER_ERROR)
+      .send(new ErrorResponse(err));
+  }
+}
+
+// DELETE A NOTE
+export async function deleteNote(req, res) {
+  try {
+    await Note.findByIdAndRemove(req.body.id);
+
+    res.send(new SuccessResponse('Note deleted'));
+  } catch (err) {
+    res
+      .status(Response.HTTP_INTERNAL_SERVER_ERROR)
+      .send(new ErrorResponse(err));
+  }
+}
